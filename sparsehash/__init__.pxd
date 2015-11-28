@@ -85,3 +85,5 @@ cdef extern from "sparsehash/sparse_hash_map" namespace "google":
         void clear_no_resize()
         pair[iterator, iterator] equal_range(K& k)
         D& operator[](K&) nogil
+        uint64_t count(K& k)
+        iterator find(K& k)
