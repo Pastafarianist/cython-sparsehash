@@ -37,7 +37,7 @@ cdef class SparseHashMap:
         # default is 0 instead of None because I have to return uint16_t
         if key in self:
             return self[key]
-        return None
+        return default
     
     def __setitem__(self, uint32_t key, uint16_t value):
         deref(self.thisptr)[key] = value
