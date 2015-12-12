@@ -26,11 +26,19 @@ cdef class SparseHashMap:
         return self.thisptr.size()
     
     def __contains__(self, uint32_t item):
-        # TODO: benchmark
+        # According to a benchmark, count() is marginally faster than
+        # find() == end(). It takes about 0.20 seconds to perform
+        # 1 000 000 random lookups in a hashtable populated with
+        # 1 000 000 random items when using count(). With find() == end(),
+        # the runtime is 0.22 seconds on average.
+        #
+        # According to a t-test performed on the results of the benchmark,
+        # the hypothesis that count() is on average faster is false
+        # with probability around 6.5%.
         return self.thisptr.count(item) > 0
     
     def __getitem__(self, uint32_t key):
-        # I am NOT raisin KeyError, because I am optimizing for speed.
+        # I am NOT raising KeyError, because I am optimizing for speed.
         return deref(self.thisptr)[key]
     
     def get(self, uint32_t key, uint16_t default=0):
@@ -46,8 +54,9 @@ cdef class SparseHashMap:
     # key to designate a deleted entry. Therefore, before any calls
     # to `__delitem__` the user should call `set_deleted_key`. I don't
     # need `del`, so I won't bother.
+    
     # def __delitem__(self, uint32_t key):
-    #     # TODO: how to detect failure?
+    #     # TODO: I also need to propagate the exception if the key isn't found.
     #     self.thisptr.erase(key)
 
     def clear(self):
