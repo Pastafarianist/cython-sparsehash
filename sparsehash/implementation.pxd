@@ -98,21 +98,3 @@ cdef class SparseHashMap:
     cdef sparse_hash_map[uint32_t, uint16_t]* thisptr
 
     # No need to define methods here.
-
-    # def __cinit__(self)
-    # def __dealloc__(self)
-    # def __bool__(self)
-    # def __len__(self)
-    # def __contains__(self, uint32_t item)
-    # def __getitem__(self, uint32_t key)
-    # def get(self, uint32_t key, uint16_t default=0)
-    # def __setitem__(self, uint32_t key, uint16_t value)
-    # def clear(self)
-    # def __iter__(self)
-    # def keys(self)
-    # def items(self)
-    # def values(self)
-    # def load(self, f)
-    # def save(self, f)
-    # def __str__(self)
-    # def __repr__(self)
