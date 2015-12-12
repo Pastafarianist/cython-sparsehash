@@ -77,9 +77,23 @@ def test_class():
 	assert len(m) == 1, len(m)
 	assert 1 in m
 	assert 8 not in m
+	print('-' * 60)
+
+
+def test_sequential_pass():
+	m = SparseHashMap()
+	N = 30
+
+	for i in range(N):
+		m[random.randint(0, 99)] = random.randint(0, MAX_UINT16)
+
+	print(', '.join(str(elem) for elem in m.keys()))
+	print(', '.join(str(elem) for elem in m.ordered_keys()))
+	print('-' * 60)
 
 
 def main():
 	test_dense()
 	test_sparse()
 	test_class()
+	test_sequential_pass()

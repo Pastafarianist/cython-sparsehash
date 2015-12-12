@@ -1,5 +1,7 @@
 from libc.stdint cimport uint32_t, uint16_t
 from libc.stdio cimport FILE, fdopen, fflush
+from libcpp.vector cimport vector
+from libcpp.algorithm cimport sort
 from cython.operator cimport dereference as deref
 
 # TODO: is it possible to write this wrapper once and then
@@ -79,6 +81,17 @@ cdef class SparseHashMap:
         for pair in deref(self.thisptr):
             key, value = pair.first, pair.second
             yield value
+
+    def ordered_keys(self):
+        cdef vector[uint32_t] v
+
+        for key in self:
+            v.push_back(key)
+
+        sort(v.begin(), v.end())
+
+        for key in v:
+            yield key
     
     def load(self, f):
         # This replaces the contents of the current hashmap.
