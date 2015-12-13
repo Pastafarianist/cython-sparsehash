@@ -89,11 +89,35 @@ def test_sequential_pass():
 
 	print(', '.join(str(elem) for elem in m.keys()))
 	print(', '.join(str(elem) for elem in m.ordered_keys()))
+
+	original_keys = list(m.keys())
+	ordered_keys = list(m.ordered_keys())
+
+	assert sorted(original_keys) == ordered_keys
+
 	print('-' * 60)
 
+def test_get():
+	m = SparseHashMap()
+
+	N = 30
+	MAX = 100
+
+	d = {random.randint(0, MAX) : random.randint(1, MAX_UINT16) for _ in range(N)}
+
+	for k, v in d.items():
+		m[k] = v
+
+	for i in range(MAX):
+		v = m.get(i, 0)
+		if v == 0:
+			assert i not in d
+		else:
+			assert v == d[i]
 
 def main():
 	test_dense()
 	test_sparse()
 	test_class()
 	test_sequential_pass()
+	test_get()

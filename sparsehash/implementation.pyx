@@ -43,11 +43,17 @@ cdef class SparseHashMap:
         # I am NOT raising KeyError, because I am optimizing for speed.
         return deref(self.thisptr)[key]
     
-    def get(self, uint32_t key, uint16_t default=0):
-        # default is 0 instead of None because I have to return uint16_t
-        if key in self:
-            return self[key]
-        return default
+    cdef uint16_t get(self, uint32_t key, uint16_t default=0):
+        # `default` is 0 instead of None because I have to return uint16_t.
+        # Here I am using find() instead of count() && lookup because
+        # it allows to retrieve the item in a single query.
+        cdef sparse_hash_map[uint32_t, uint16_t].iterator it
+
+        it = self.thisptr.find(key)
+        if it != self.thisptr.end():
+            return deref(it).second
+        else:
+            return default
     
     def __setitem__(self, uint32_t key, uint16_t value):
         deref(self.thisptr)[key] = value

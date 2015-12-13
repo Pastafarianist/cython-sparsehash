@@ -97,4 +97,8 @@ cdef extern from "sparsehash/sparse_hash_map" namespace "google":
 cdef class SparseHashMap:
     cdef sparse_hash_map[uint32_t, uint16_t]* thisptr
 
-    # No need to define methods here.
+    # No need to define `def` methods here, only `cdef`.
+    # TODO: Cython compilation crashes if I write the default value explicitly
+    # here with an error message that I should be using "?" or "*". However,
+    # the documentation never mentions "?" at all.
+    cdef uint16_t get(self, uint32_t key, uint16_t default=*)
