@@ -1,3 +1,5 @@
+# cython: profile=True
+
 from libc.stdint cimport uint32_t, uint16_t
 from libc.stdio cimport FILE, fdopen, fflush
 from libcpp.vector cimport vector
@@ -13,9 +15,16 @@ cdef class SparseHashMap:
     def __cinit__(self, f=None):
         self.thisptr = new sparse_hash_map[uint32_t, uint16_t]()
 
-    def __init__(self, f=None):
-        if f is not None:
-            self.load(f)
+    def __init__(self, arg=None):
+        if hasattr(arg, 'fileno'):
+            self.load(arg)
+        elif isinstance(arg, int):
+            self.thisptr.resize(arg)
+        elif isinstance(arg, str):
+            with open(arg, 'rb') as f:
+                self.load(f)
+        elif arg is not None:
+            raise ValueError("Cannot interpret argument of type %s" % type(arg))
     
     def __dealloc__(self):
         del self.thisptr
