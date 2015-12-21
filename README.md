@@ -1,5 +1,12 @@
 # Cython headers for Google Sparsehash
 
-This library provides Cython `.pxd` files for Google's Sparsehash library. Both `dense_hash_map` and `sparse_hash_map` are implemented.
+This library provides Cython `.pxd` files for Google's Sparsehash library. Both `dense_hash_map` and `sparse_hash_map` are implemented. They are useful only when used directly for Cython.
 
-As yet it's only intended for use directly from Cython. I doubt it'll be of any use to pure Python programs — the built-in `dict` is better.
+In case you need to use `sparsehash` from Python, there is an incomplete wrapper `sparse_hash_map` in `class SparseHashMap` which will require setting the C++ template parameters manually. The current version maps `uint32_t` to `uint16_t` as that is what I originally needed. Refer to `test_internal.pyx` for example usage.
+
+TODO:
+
+* Figure out a way to instantiate `SparseHashMap` without setting template parameters manually
+* Add a custom hash function
+* Benchmark `cdef get` versus `cpdef get`
+* Consider migrating to `serialize/unserialize` of `sparse_hash_map`. The docs [say](https://sparsehash.googlecode.com/svn/trunk/doc/sparse_hash_map.html#io) that it is currently the preferred way to do I/O. However, the only advantage I see is that it is also implemented by `dense_hash_map`, unlike `{read,write}_{metadata,nopointer_data}`.
